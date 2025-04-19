@@ -1,0 +1,10 @@
+[
+    {
+        "user": "hi\n",
+        "bot": "Hi there! How are you doing today?  Let me know what's on your mind. I'm here to listen. \ud83d\ude0a\n"
+    },
+    {
+        "user": "hi\niam very sad.today\n",
+        "bot": "Oh no, I'm so sorry to hear you're feeling very sad today.  I'm here for you.  It's okay to feel sad, and I want to listen without judgment.  \n\nWould you like to talk about what's making you feel this way?  Even if you don't feel like sharing specifics, just knowing you're not alone can sometimes help.  Whatever you're comfortable with is fine. \u2764\ufe0f\n"
+    }
+]
