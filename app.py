@@ -11,6 +11,7 @@ from langdetect import detect
 from deep_translator import GoogleTranslator  # Replace googletrans with deep-translator
 # Update Eleven Labs import to use the correct API
 import elevenlabs
+from elevenlabs.client import ElevenLabs
 
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -21,6 +22,7 @@ if not GROQ_API_KEY:
 # Configure Eleven Labs API
 ELEVEN_LABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
 if ELEVEN_LABS_API_KEY:
+    # Set the API key using the proper method for this elevenlabs version
     elevenlabs.api_key = ELEVEN_LABS_API_KEY
     eleven_labs_available = True
 else:
@@ -378,37 +380,14 @@ with st.sidebar:
             eleven_labs_available = True
             st.success("API key set successfully!")
     
-    if eleven_labs_available or ELEVEN_LABS_API_KEY:
+    if eleven_labs_available:
         elevenlabs_html = """
-        <elevenlabs-convai agent-id="jw3AbtarA0MWqlpksUb3"></elevenlabs-convai>
-        <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
+        <div style="width: 100%; margin: 0 auto;">
+            <elevenlabs-convai agent-id="jw3AbtarA0MWqlpksUb3"></elevenlabs-convai>
+            <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
+        </div>
         """
         st.components.v1.html(elevenlabs_html, height=150)  # Increased height for better visibility
-    
-    # Text-to-speech direct integration
-    if eleven_labs_available:
-        st.markdown("### Text-to-Speech")
-        if "available_voices" not in st.session_state:
-            try:
-                st.session_state.available_voices = elevenlabs.voices()
-                voice_names = [voice.name for voice in st.session_state.available_voices]
-            except Exception:
-                voice_names = ["Rachel", "Drew", "Clyde", "Domi"]  # Default voice options
-        else:
-            voice_names = [voice.name for voice in st.session_state.available_voices]
-        
-        selected_voice = st.selectbox("Select Voice:", voice_names, index=0)
-        st.button("Convert Last Response to Speech", key="tts_button")
-        
-        # If the button is pressed, generate speech for the last bot message
-        if st.session_state.get("tts_button", False) and st.session_state.chat_history:
-            last_bot_msg = next((msg for role, msg in reversed(st.session_state.chat_history) if role == "assistant"), None)
-            if last_bot_msg:
-                try:
-                    audio = elevenlabs.generate(text=last_bot_msg, voice=selected_voice)
-                    st.audio(audio, format="audio/mp3")
-                except Exception as e:
-                    st.error(f"Error generating speech: {str(e)}")
     
     st.markdown("---")
     st.markdown("*Note: This chatbot is for informational purposes only and should not replace professional mental health advice.*")
